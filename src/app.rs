@@ -6,7 +6,7 @@ use crossbeam_channel::{unbounded, Receiver, Sender};
 
 use eframe::egui_glow::check_for_gl_error;
 use egui::style::Selection;
-use egui::{Color32, CornerRadius, FontData, Stroke, TextEdit, Vec2, Visuals};
+use egui::{Color32, CornerRadius, FontData, RichText, Stroke, TextEdit, Vec2, Visuals};
 use rseip::client::ab_eip::*;
 use rseip::precludes::*;
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
@@ -162,19 +162,33 @@ impl eframe::App for TemplateApp {
             }
             match &self.received_msg {
                 ReadChannelMsg::Value(v) => {
-                    ui.heading(format!("{}", v));
+                    ui.vertical_centered(|ui| {
+                        ui.add_space(100.0);
+                        if ui
+                            .label(
+                                RichText::new(format!("  {} %  ", v))
+                                    .size(50.0)
+                                    .background_color(Color32::BLACK)
+                                    .color(Color32::WHITE),
+                            )
+                            .double_clicked()
+                        {
+                            println!("Hello world");
+                        }
+                    });
                 }
                 ReadChannelMsg::Error(e) => {
-                    ui.heading(e);
+                    ui.vertical_centered(|ui| {
+                        ui.add_space(100.0);
+                        ui.label(
+                            RichText::new(format!("ERROR: {}", e))
+                                .size(50.0)
+                                .background_color(Color32::BLACK)
+                                .color(Color32::WHITE),
+                        );
+                    });
                 }
             }
-
-            ui.add(
-                TextEdit::singleline(&mut self.label)
-                    .background_color(Color32::BLACK)
-                    .text_color(Color32::WHITE)
-                    .min_size(Vec2::new(50.0, 50.0)),
-            );
         });
     }
 }
