@@ -148,7 +148,7 @@ impl eframe::App for TemplateApp {
                     ui.add_space(16.0);
                 }
 
-                egui::widgets::global_theme_preference_buttons(ui);
+                //egui::widgets::global_theme_preference_buttons(ui);
             });
         });
 
@@ -175,6 +175,8 @@ impl eframe::App for TemplateApp {
                         {
                             println!("Hello world");
                         }
+                        egui::Image::new("file://background.jpg")
+                            .paint_at(ui, ui.ctx().available_rect());
                     });
                 }
                 ReadChannelMsg::Error(e) => {
